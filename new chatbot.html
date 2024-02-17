@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SANJIVANI COLLEGE OF ENGINEERING</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: rgb(174, 221, 221);">
+    <div class="chatbot-container">
+        <div id="header">
+            <h3> SANJIVANI COLLEGE OF ENGINEERING</h3>
+        </div>
+        <div id="chatbot">
+            <div id="conversation">
+              <div class="chatbot-message">
+                <p class="chatbot-text">Hi! 👋 it's great to see you!How can i help you?
+                </p>
+              </div>
+            </div>
+            <form id="input-form">
+              <message-container>
+                <input id="input-field" type="text" placeholder="Type your message here">
+                <button id="submit-button" type="submit">
+                  <img class="send-icon" src="send-message.png" alt="">
+                </button>
+              </message-container>
+                
+            </form>
+        </div>  
+
+    </div>
+
+
+    <script src="chatbot.js"></script>
+    <style>
+    body {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .chatbot-container {
+        width: 500px;
+        margin: 0 auto;
+        background-color: #f5f5f5;
+        border: 1px solid #cccccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    
+    #chatbot {
+        background-color: #f5f5f5;
+        border: 1px solid #eef1f5;
+        box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+      }
+      
+      #header {
+        background-color: rgb(43, 161, 161);
+        color: #ffffff;
+        padding: 20px;
+        font-size: 1em;
+        font-weight: bold;
+      }
+    
+      message-container {
+        background: #ffffff;
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+      
+      
+      #conversation {
+        height: 500px;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+    
+      @keyframes message-fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .chatbot-message {
+        display: flex;
+        align-items: flex-start;
+        position: relative;
+        font-size: 16px;
+        line-height: 20px;
+        border-radius: 20px;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        max-width: 100%;
+        padding: 0 15px;
+      }
+    
+      .user-message {
+        justify-content: flex-end;
+      }
+    
+    
+    .chatbot-text {
+        background-color: white;
+        color: #333333;
+        font-size: 1.1em;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      #input-form {
+        display: flex;
+        align-items: center;
+        border-top: 1px solid #eef1f5;
+      }
+      
+      #input-field {
+        flex: 1;
+        height: 60px;
+        border: 1px solid #eef1f5;
+        border-radius: 4px;
+        padding: 0 10px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+        background: #ffffff;
+        color: #333333;
+        border: none;
+      }
+
+
+      
+    
+      .send-icon {
+        margin-right: 10px;
+        cursor: pointer;
+      }
+      
+      #input-field:focus {
+        border-color: #333333;
+        outline: none;
+      }
+      
+      #submit-button {
+        background-color: transparent;
+        border: none;
+      }
+    
+      p[sentTime]:hover::after {    
+        content: attr(sentTime);
+        position: absolute;
+        top: -3px;
+        font-size: 14px;
+        color: gray;
+      }
+    
+      .chatbot p[sentTime]:hover::after {  
+        left: 15px;
+      }
+    
+      .user-message p[sentTime]:hover::after {  
+        right: 15px;
+      }
+    
+      /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+      }
+      
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+      }
+       
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        background: #888; 
+      }
+      
+      /* Handle on hover */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+      }
+
+
+
+    </style>
+    <script>
+      // Get chatbot elements
+  const chatbot = document.getElementById('chatbot');
+  const conversation = document.getElementById('conversation');
+  const inputForm = document.getElementById('input-form');
+  const inputField = document.getElementById('input-field');
+  
+  // Add event listener to input form
+  inputForm.addEventListener('submit', function(event) {
+    // Prevent form submission
+    event.preventDefault();
+  
+    // Get user input
+    const input = inputField.value;
+  
+    inputField.value = '';
+    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: "2-digit" });
+  
+    let message = document.createElement('div');
+    message.classList.add('chatbot-message', 'user-message');
+    message.innerHTML = `<p class="chatbot-text" sentTime="${currentTime}">${input}</p>`;
+    conversation.appendChild(message);
+  
+    const response = generateResponse(input);
+  
+    
+    message = document.createElement('div');
+    message.classList.add('chatbot-message','chatbot');
+    message.innerHTML = `<p class="chatbot-text" sentTime="${currentTime}">${response}</p>`;
+    conversation.appendChild(message);
+    message.scrollIntoView({behavior: "smooth"});
+  });
+  function generateResponse(input) {
+      const responses = {
+          "admission": "Our admission process involves application submission, entrance exams, and counseling sessions. Detailed information can be found on our website or by contacting our admission office.",
+          "Admission": "Our admission process involves application submission, entrance exams, and counseling sessions. Detailed information can be found on our website or by contacting our admission office.",
+          "engineering programs": "We offer various engineering programs such as Computer Science, Mechanical, Electrical, Civil, and more. Each program is designed to provide a comprehensive education in its field.",
+          "address" : "Sanjivani College of Engineering,Kopargaon, Shingnapur Road,Shingnapur, Maharashtra 423603,India.",
+          "placement":" 750 students from Sanjivani College of Engineering has been placed in top MNC's.",
+          "establishment":"Sanjivani Institute has been established in 1983 under the leadership of Shri. Shankaroa G. Kolhe",
+          "autonomous":"Sanjivani Institute is an Autonomous Institute.",
+          "email":"contact@sanjivani.org.in",
+          "alumni":"Mahesh Gupta(Director-Solution design),Akshay Mathur(Global director,Western digital company)",
+          "nearest Railway Station":" Kopargaon (1Km)",
+          "intake of computer science engineering":"120",
+          "intake of electronics and computer engineering":"60",
+          "intake of mechanical engineering":"120",
+          "intake of civil engineering":"120",
+          "intake of mechatronics engineering":"60",
+          "intake of structural engineering":"60",
+          "intake of electrical engineering":"60",
+          "intake of IT engineering":"120",
+          "nearest airport":"Shirdi (10Km)",
+          "central library":"Total Library Collection:  8788Total No of Titles:  23401Total No of Volumes:  58121Total Periodicals and Journals :A) National:  120B) International:  20C) E-Journals:   4021Total investment Books, Furniture & Equipments – Rs. 3.12 Crore +Total Library Area: 1096.35 sq.mLibrary Stack & Reference Section: 537 sq.mReading Hall: 559.35 sq.m",
+          "facilities": "Our campus is equipped with modern facilities including advanced laboratories, extensive libraries, sports amenities, and more to support students' academic pursuits.",
+          "placement support": "Our placement cell assists students with career counseling, skill enhancement workshops, and industry connections to facilitate placement opportunities.",
+          
+
+      };
+  
+      const lowercaseInput = input.toLowerCase();
+  
+      for (const [key, value] of Object.entries(responses)) {
+          if (lowercaseInput.includes(key)) {
+              return value;
+          }
+      }
+  
+      return "Apologies, I might not have the specific information right now. For detailed assistance, please reach out to our college office.";
+  }
+    
+  </script>
